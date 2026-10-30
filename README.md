@@ -1,196 +1,123 @@
-# AI_News_Credibility_Dashboard
-AI-powered News Credibility &amp; Sentiment Analysis Dashboard built with Python, Streamlit, SQLite, TextBlob, NLTK, Hugging Face, and Plotly.
 # AI-Based News Sentiment and Credibility Assistance Dashboard
 
-## 📌 Project Overview
+A beginner-friendly MCA mini project built with Python, Streamlit, SQLite, TextBlob, NLTK, Hugging Face Transformers, Pandas, Plotly, and ReportLab.
 
-The **AI-Based News Sentiment and Credibility Assistance Dashboard** is a Python-based web application that analyzes news headlines, articles, and social media posts.
+## Important disclaimer
 
-The project uses Natural Language Processing (NLP), sentiment analysis, text summarization, and linguistic warning-signal detection to help users understand the language and tone of online content.
+> This tool analyzes linguistic and content-based warning signals. It does not independently verify whether a news item is true or false.
 
-It provides sentiment classification, clickbait detection, warning signals, a heuristic credibility-assistance score, and analysis history through an interactive dashboard.
+The score is a transparent heuristic based on selected text patterns. It is not a fact-checking system or a validated misinformation detector.
 
-**Important Disclaimer:** This tool analyzes linguistic and content-based warning signals. It does not independently verify whether a news item is true or false.
+## Features
 
-## 🎯 Objectives
+- Positive, Negative, or Neutral sentiment using TextBlob
+- Polarity score from -1 to +1
+- Clickbait and sensational-language pattern detection
+- Heuristic credibility-assistance score from 0 to 100
+- Optional Hugging Face summarization with a graceful fallback
+- SQLite analysis history with filtering and deletion
+- Plotly charts and recent analysis metrics
+- Downloadable PDF report
 
-- Analyze the sentiment of news articles and headlines.
-- Classify content as Positive, Negative, or Neutral.
-- Detect common clickbait phrases.
-- Identify sensational and potentially misleading language patterns.
-- Generate a credibility-assistance score from 0 to 100.
-- Generate short summaries of news content.
-- Store previous analysis records.
-- Display analysis results through interactive charts.
-- Generate downloadable PDF reports.
+## Requirements
 
-## ✨ Key Features
+- Python 3.10 or newer recommended
+- Internet connection for first-time NLTK resource and Hugging Face model downloads
+- A few GB of free disk space may be needed for the summarization model and PyTorch
 
-1. **Sentiment Analysis:** Identifies positive, negative, and neutral sentiment.
-2. **Text Polarity:** Calculates the polarity score of the entered text.
-3. **Clickbait Detection:** Identifies commonly used clickbait phrases.
-4. **Warning Signal Detection:** Highlights sensational language and other linguistic warning patterns.
-5. **Credibility Assistance Score:** Provides a heuristic score based on detected warning signals.
-6. **News Summarization:** Generates a short summary using a pretrained AI model when available.
-7. **Analysis History:** Stores previous analyses using SQLite.
-8. **Interactive Dashboard:** Displays sentiment distribution and credibility trends.
-9. **PDF Report Generation:** Allows users to download analysis reports.
+## Setup
 
-## 🛠️ Technologies Used
+### Windows
 
-| Technology | Purpose |
-|---|---|
-| Python | Main programming language |
-| Streamlit | Web application and user interface |
-| TextBlob | Sentiment analysis |
-| NLTK | Text preprocessing |
-| Hugging Face Transformers | Text summarization |
-| SQLite | Database management |
-| Pandas | Data handling |
-| Plotly | Interactive charts |
-| ReportLab | PDF report generation |
+1. Extract the project ZIP.
+2. Open the project folder in VS Code.
+3. Open Terminal > New Terminal.
+4. Create a virtual environment:
 
-## ⚙️ Project Structure
+   ```bash
+   py -m venv .venv
+   ```
 
-```text
-AI_News_Credibility_Dashboard/
-│
-├── app.py
-├── analyzer.py
-├── preprocessing.py
-├── summarizer.py
-├── database.py
-├── pdf_report.py
-├── requirements.txt
-├── README.md
-├── PROJECT_REPORT.md
-├── test_analyzer.py
-└── .gitignore
-```
+5. Activate it:
 
-## 💻 Installation and Setup
+   ```bash
+   .venv\\Scripts\\activate
+   ```
 
-### Step 1: Clone the Repository
+6. Install packages:
+
+   ```bash
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+7. Start the application:
+
+   ```bash
+   streamlit run app.py
+   ```
+
+8. Streamlit normally opens the browser automatically. If not, open the local URL printed in the terminal, usually `http://localhost:8501`.
+
+### macOS / Linux
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_LINK
-```
-
-Replace `YOUR_GITHUB_REPOSITORY_LINK` with your actual GitHub repository URL.
-
-### Step 2: Open the Project Folder
-
-```bash
-cd AI_News_Credibility_Dashboard
-```
-
-### Step 3: Create a Virtual Environment
-
-```bash
-python -m venv .venv
-```
-
-### Step 4: Activate the Environment
-
-**For Windows:**
-
-```bash
-.venv\Scripts\activate
-```
-
-### Step 5: Install Required Libraries
-
-```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+streamlit run app.py
 ```
 
-### Step 6: Run the Application
+## First run
 
-```bash
-python -m streamlit run app.py
-```
+- The app creates `news_analysis.db` automatically.
+- NLTK may download tokenizer, stop-word, and WordNet resources when needed.
+- The summarization model is downloaded on its first use. The first analysis of a long article may be slower.
+- If model download/loading fails, the app uses a short extractive fallback and continues working.
 
-The application will open in your web browser.
+## Folder contents
 
-If it does not open automatically, visit:
+- `app.py`: Streamlit user interface and page navigation
+- `analyzer.py`: sentiment, warning signals, and scoring
+- `preprocessing.py`: text cleaning, tokenization, stop-word removal, and lemmatization
+- `summarizer.py`: Hugging Face summarization and fallback
+- `database.py`: SQLite database functions
+- `pdf_report.py`: PDF export
+- `requirements.txt`: required Python packages
+- `news_analysis.db`: created automatically at runtime
 
-```text
-http://localhost:8501
-```
+## Scoring rules
 
-## 📊 Application Modules
+Starts at 100:
+- Any configured clickbait phrase: -15
+- More than three exclamation marks: -10
+- Excessive uppercase letters: -10
+- Each distinct extreme/manipulative word: -5
+- Vague attribution phrase: -10
+- Source-related phrase: +5
+- Number/date present: +5
+- Final score is clipped to 0–100
 
-| Module | Description |
-|---|---|
-| Home | Displays project introduction and features |
-| Analyze News | Performs sentiment and warning-signal analysis |
-| Dashboard | Displays charts and analysis statistics |
-| Analysis History | Shows previously saved analyses |
-| About the Project | Provides project information and details |
+Categories:
+- 75–100: Low linguistic risk
+- 45–74: Moderate linguistic risk
+- 0–44: High linguistic risk
 
-## 🗄️ Database
+This rubric is educational and should not be interpreted as a factual credibility measurement. A source phrase or number can be present in inaccurate content, and reliable writing may use emotional language.
 
-The project uses **SQLite** to store analysis records.
+## Troubleshooting
 
-The database maintains information such as:
+- If `streamlit` is not recognized, activate `.venv` and run `python -m streamlit run app.py`.
+- If package installation fails, confirm Python is 3.10+ and retry in a new virtual environment.
+- If the transformer model cannot download, check internet access. The app still works using fallback summarization.
+- To reset local history, stop the app and delete `news_analysis.db`. This permanently deletes saved analyses.
+- Keep the database private if pasted text contains sensitive information.
 
-- News text
-- Sentiment classification
-- Polarity score
-- Credibility-assistance score
-- Warning signals
-- Analysis date and time
+## Academic extension ideas
 
-The database is initialized automatically when the application runs.
-
-## 🔍 Working Methodology
-
-1. The user enters a news headline, article, or social media post.
-2. The application preprocesses the text.
-3. Sentiment analysis identifies the overall tone.
-4. Clickbait and warning-signal detection checks for suspicious linguistic patterns.
-5. A heuristic credibility-assistance score is calculated.
-6. A short summary is generated when the summarization model is available.
-7. The results are stored in SQLite.
-8. The dashboard displays the analysis and allows PDF report generation.
-
-## ⚠️ Limitations
-
-- The application does not independently verify news authenticity.
-- Sentiment analysis may not correctly understand sarcasm or complex language.
-- Warning signals are based on predefined linguistic patterns.
-- The credibility-assistance score is heuristic and should not be treated as a factual probability.
-- AI summarization may require an internet connection to download the pretrained model initially.
-
-## 🚀 Future Enhancements
-
-- Integration with trusted fact-checking websites and APIs.
-- Support for multiple languages.
-- Advanced machine learning-based classification.
-- Real-time news analysis.
-- Improved clickbait and misinformation detection.
-- News source comparison and verification assistance.
-
-## 🎓 Academic Project
-
-**Project Title:** AI-Based News Sentiment and Credibility Assistance Dashboard
-
-**Project Type:** MCA Mini Project
-
-**Domain:** Artificial Intelligence and Natural Language Processing
-
-**Programming Language:** Python
-
-## 👩‍💻 Author
-
-**Shivani Thakur**
-
-Master of Computer Applications (MCA)
-
-Chandigarh University
-
----
-
-⭐ If you find this project useful, consider giving the repository a star.
-
-**Disclaimer:** This project is developed for educational purposes. Its results are intended to assist users in examining linguistic warning signals, not to establish the truth or falsity of news content.
+- Compare TextBlob sentiment with a transformer sentiment model
+- Add source URLs and user-entered citations
+- Add language selection and model evaluation
+- Test the heuristic on a labeled dataset and report precision/recall for a clearly defined task
+- Add user authentication only if required for deployment
